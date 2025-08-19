@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Linktree</title>
+  <meta name="description" content="Jednoduchý, snadno editovatelný Link Tree – jeden HTML soubor, žádné závislosti." />
+  <meta property="og:title" content="Moje odkazy" />
+  <meta property="og:description" content="Jednoduchý, snadno editovatelný Link Tree – jeden HTML soubor, žádné závislosti." />
+  <meta property="og:type" content="website" />
+  <meta name="color-scheme" content="light dark" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>🌿</text></svg>">
+  <style>
+    :root{
+      --bg: #0f1115;
+      --card: #171a21;
+      --text: #e7ecef;
+      --muted: #b6c2cf;
+      --accent: #3ba144;
+      --accent-contrast: #0c1a10;
+      --ring: color-mix(in oklab, var(--accent) 40%, white);
+      --radius: 18px;
+      --maxw: 680px;
+      --gap: 14px;
+      --btn-h: 56px;
+    }
+
+    .light{
+      --bg: #f6f7f9;
+      --card: #ffffff;
+      --text: #101418;
+      --muted: #4b5563;
+      --accent: #3ba144;
+      --accent-contrast: #ffffff;
+      --ring: color-mix(in oklab, var(--accent) 35%, black);
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font: 16px/1.5 system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, 'Noto Sans', sans-serif;
+      color:var(--text);
+      background:radial-gradient(1200px 800px at 10% -10%, color-mix(in oklab, var(--accent) 15%, var(--bg)), transparent 50%),
+                 radial-gradient(800px 600px at 100% 0%, color-mix(in oklab, var(--accent) 10%, var(--bg)), transparent 50%),
+                 var(--bg);
+      display:grid;
+      place-items:center;
+      padding:28px 16px 40px;
+    }
+
+    .wrap{width:100%;max-width:var(--maxw)}
+
+    .card{
+      background:var(--card);
+      border:1px solid color-mix(in oklab, var(--card) 85%, var(--text));
+      border-radius:calc(var(--radius) + 6px);
+      box-shadow: 0 10px 30px rgba(0,0,0,.25);
+      padding:28px;
+    }
+
+    header{
+      display:grid; grid-template-columns:72px 1fr auto; gap:16px; align-items:center;
+    }
+    .avatar{
+      width:72px;height:72px;border-radius:50%;
+      background:linear-gradient(180deg, color-mix(in oklab, var(--accent) 40%, #fff0), #0000),
+                 url('https://avatars.githubusercontent.com/lukygith') center/cover no-repeat;
+      border:2px solid color-mix(in oklab, var(--accent) 60%, var(--card));
+      box-shadow: 0 6px 20px rgba(0,0,0,.25);
+    }
+    .title{margin:0;font-size:1.4rem;font-weight:800;letter-spacing:.2px}
+    .subtitle{margin:.2rem 0 0;color:var(--muted)}
+
+    .theme-toggle{
+      appearance:none;border:1px solid color-mix(in oklab, var(--card) 82%, var(--text));
+      background:var(--card); color:var(--text);
+      border-radius:999px; padding:.4rem .7rem; cursor:pointer; font-weight:600;
+    }
+    .theme-toggle:focus{outline:none; box-shadow:0 0 0 4px color-mix(in oklab, var(--ring) 40%, transparent)}
+
+    .links{margin:22px 0 0; display:grid; gap:var(--gap)}
+
+    .link{
+      display:flex; align-items:center; gap:12px; height:var(--btn-h);
+      border-radius:var(--radius); padding:0 16px; text-decoration:none;
+      color:var(--text); background:linear-gradient(0deg, color-mix(in oklab, var(--card) 96%, var(--accent)), var(--card));
+      border:1px solid color-mix(in oklab, var(--card) 80%, var(--text));
+      transition: transform .08s ease, box-shadow .08s ease, background .2s ease;
+    }
+    .link:hover{ transform: translateY(-2px); box-shadow:0 10px 18px rgba(0,0,0,.25) }
+    .link:focus{ outline:none; box-shadow:0 0 0 5px color-mix(in oklab, var(--ring) 50%, transparent) }
+
+    .icon{ width:24px; height:24px; display:grid; place-items:center; }
+
+    .badge{ margin-left:auto; font-size:.82rem; font-weight:700; color:var(--accent-contrast);
+            background:var(--accent); padding:.28rem .55rem; border-radius:999px; }
+
+    .note{ margin:16px 0 0; color:var(--muted); font-size:.95rem }
+
+    footer{ margin-top:22px; display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:space-between }
+    .social{ display:flex; gap:10px; }
+    .social a{ display:grid; place-items:center; width:42px; height:42px; border-radius:50%;
+               border:1px solid color-mix(in oklab, var(--card) 80%, var(--text));
+               background:var(--card); text-decoration:none; color:var(--text) }
+    .social a:hover{ transform:translateY(-2px) }
+
+    @media (max-width: 420px){
+      header{ grid-template-columns:56px 1fr auto }
+      .avatar{ width:56px; height:56px }
+      .title{ font-size:1.2rem }
+      .link{ height:52px }
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <div class="card">
+      <header>
+        <div class="avatar" aria-hidden="true"></div>
+        <div>
+          <h1 class="title">Lukáš</h1>
+          <p class="subtitle">C++ Python Batch</p>
+        </div>
+        <button class="theme-toggle" id="themeToggle" title="Přepnout motiv">🌓</button>
+      </header>
+
+      <section class="links" aria-label="Hlavní odkazy">
+        <a class="link" href="https://www.lukkesa.fun" target="_blank" rel="noopener">
+          <span class="icon">🌐</span>
+          Můj web
+          <span class="badge">Nové</span>
+        </a>
+
+        <a class="link" href="https://github.com/lukygith" target="_blank" rel="noopener">
+          <span class="icon">💻</span>
+          GitHub
+        </a>
+
+        <a class="link" href="https://x.com/" target="_blank" rel="noopener">
+          <span class="icon">✖️</span>
+          X (Twitter)
+        </a>
+
+        <a class="link" href="https://instagram.com/lukkesa" target="_blank" rel="noopener">
+          <span class="icon">📸</span>
+          Instagram
+        </a>
+      </section>
+
+      <p class="note">💡 Tip: Pokud chceš podobné linktree na míru napiš mi!</p>
+
+      <footer>
+        <div class="social" aria-label="Sociální sítě – ikony">
+        </div>
+        <small style="color:var(--muted)">© <span id="year"></span> lukkesa</small>
+      </footer>
+    </div>
+  </main>
+
+  <script>
+    const key = 'linktree-theme';
+    const root = document.documentElement;
+    const saved = localStorage.getItem(key);
+
+    function applyTheme(mode){
+      if(mode === 'light'){
+        root.classList.add('light');
+        root.classList.remove('dark');
+      } else {
+        root.classList.remove('light');
+      }
+      localStorage.setItem(key, mode);
+    }
+
+    // Default = dark
+    if(saved){
+      applyTheme(saved);
+    } else {
+      localStorage.setItem(key, 'dark');
+    }
+
+    document.getElementById('themeToggle').addEventListener('click', () => {
+      const current = localStorage.getItem(key);
+      const next = current === 'dark' ? 'light' : 'dark';
+      applyTheme(next);
+    });
+
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
